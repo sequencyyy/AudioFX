@@ -19,13 +19,6 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/audio
       - SECRET_KEY=nvsu-secret-key
-    develop:
-      watch:
-        - path: ./app/main.py
-          action: rebuild
-        - path: ./app
-          target: /usr/src/app
-          action: sync
 
   celery:
     build:
@@ -59,7 +52,7 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://85.198.82.123:8000
     volumes:
       - ./frontend:/app
 
