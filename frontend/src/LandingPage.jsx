@@ -290,7 +290,14 @@ export default function LandingPage() {
             <Form.Item
               label="Имя пользователя"
               name="username"
-              rules={[{ required: true, message: 'Пожалуйста, введите имя пользователя' }]}
+              rules={[
+                { required: true, message: 'Пожалуйста, введите имя пользователя' },
+                { min: 3, max: 20, message: 'Имя пользователя должно быть от 3 до 20 символов' },
+                {
+                  pattern: /^\S+$/,
+                  message: 'Имя пользователя не должно содержать пробелов'
+                }
+              ]}
             >
               <Input size="large" placeholder="Ваше имя" />
             </Form.Item>
@@ -302,7 +309,8 @@ export default function LandingPage() {
               name="email"
               rules={[
                 { required: true, message: 'Пожалуйста, введите email' },
-                { type: 'email', message: 'Пожалуйста, введите корректный email' }
+                { type: 'email', message: 'Пожалуйста, введите корректный email' },
+                { pattern: /^\S+$/, message: 'Email не должен содержать пробелов' }
               ]}
             >
               <Input size="large" placeholder="example@email.com" />
@@ -314,7 +322,8 @@ export default function LandingPage() {
             name="password"
             rules={[
               { required: true, message: 'Пожалуйста, введите пароль' },
-              { min: 6, message: 'Пароль должен содержать минимум 6 символов' }
+              { min: 6, message: 'Пароль должен содержать минимум 6 символов' },
+              { pattern: /^\S+$/, message: 'Пароль не должен содержать пробелов' }
             ]}
           >
             <Input.Password size="large" placeholder="••••••••" />
