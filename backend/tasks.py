@@ -33,15 +33,11 @@ os.makedirs(IR_DIR, exist_ok=True)
 redis_client = redis.StrictRedis(host="redis", port=6379, decode_responses=True)
 
 @celery_app.task(bind=True)
-def speedup_audio(self, file_path: str, speed: float, volume:float, user_id="test_user"):
+def speedup_audio(self, file_path: str, speed: float, volume:float, user_id: int):
     try:
         parameters = {
             "speed": speed,
-            "pitch": pitch,
-            "reverb_amount": reverb_amount,
-            "volume": volume,
-            "bass_gain": bass_gain,
-            "flanger_mix": flanger_mix
+            "volume": volume
         }
         output_filename = f"{os.path.basename(file_path).split('.mp3')[0]}_speedup.mp3"
         output_path = os.path.join(PROCESSED_DIR, output_filename)
@@ -69,15 +65,12 @@ def speedup_audio(self, file_path: str, speed: float, volume:float, user_id="tes
         raise Exception(f"Error processing file: {e}")
 
 @celery_app.task(bind=True)
-def slowed_reverb_audio(self, file_path: str, speed: float, reverb_amount: float, volume:float, user_id="test_user"):
+def slowed_reverb_audio(self, file_path: str, speed: float, reverb_amount: float, volume:float, user_id: int):
     try:
         parameters = {
             "speed": speed,
-            "pitch": pitch,
             "reverb_amount": reverb_amount,
-            "volume": volume,
-            "bass_gain": bass_gain,
-            "flanger_mix": flanger_mix
+            "volume": volume
         }
         output_filename = f"{os.path.basename(file_path).split('.mp3')[0]}_slowed_reverb.mp3"
         output_path = os.path.join(PROCESSED_DIR, output_filename)
@@ -117,15 +110,12 @@ def slowed_reverb_audio(self, file_path: str, speed: float, reverb_amount: float
         raise Exception(f"Error processing file: {e}")
 
 @celery_app.task(bind=True)
-def nightcore_audio(self, file_path: str, speed: float, pitch: float, volume:float, user_id="test_user"):
+def nightcore_audio(self, file_path: str, speed: float, pitch: float, volume:float, user_id: int):
     try:
         parameters = {
             "speed": speed,
             "pitch": pitch,
-            "reverb_amount": reverb_amount,
-            "volume": volume,
-            "bass_gain": bass_gain,
-            "flanger_mix": flanger_mix
+            "volume": volume
         }
         output_filename = f"{os.path.basename(file_path).split('.mp3')[0]}_nightcore.mp3"
         output_path = os.path.join(PROCESSED_DIR, output_filename)
