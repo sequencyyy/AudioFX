@@ -81,7 +81,7 @@ def slowed_reverb_audio(self, file_path: str, speed: float, reverb_amount: float
         if reverb_amount <= 0:
             param_reverb = f"atempo={speed}, volume={volume}"
         else:
-            param_reverb = f"atempo={speed},aecho=0.8:reverb_c:{reverb_amount}:0.35, volume={volume}"
+            param_reverb = f"atempo={speed},aecho=0.8:0.88:{reverb_amount}:0.35, volume={volume}"
 
         
         
