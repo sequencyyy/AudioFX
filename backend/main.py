@@ -24,10 +24,23 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import Column, String, ForeignKey, DateTime, Boolean, Integer, JSON
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from exceptions import (
+    global_exception_handler,
+    http_exception_handler,
+    validation_exception_handler,
+)
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+app = FastAPI()
+
+app.add_exception_handler(Exception, global_exception_handler)
+app.add_exception_handler(StarletteHTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-app = FastAPI()
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
