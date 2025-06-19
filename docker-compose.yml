@@ -1,0 +1,78 @@
+services:
+  redis:
+    image: redis:7.4.2
+    ports:
+      - "6379:6379"
+    
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./backend:/app
+      - ./processed:/app/processed
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/audio
+      - SECRET_KEY=nvsu-secret-key
+    develop:
+      watch:
+        - path: ./app/main.py
+          action: rebuild
+        - path: ./app
+          target: /usr/src/app
+          action: sync
+
+  celery:
+    build:
+      context: ./backend
+    command: celery -A tasks.celery_app worker --loglevel=info
+    depends_on:
+      - redis
+      - backend
+    volumes:
+      - ./backend:/app
+      - ./processed:/app/processed
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+
+  db:
+      image: postgres:15
+      environment:
+        POSTGRES_DB: audio
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
