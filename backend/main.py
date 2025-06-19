@@ -31,6 +31,8 @@ from exceptions import (
 )
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from sqlalchemy.exc import IntegrityError
+
 
 app = FastAPI()
 
@@ -106,14 +108,23 @@ async def get_processing_history(current_user: User = Depends(get_current_user))
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter_by(username=user.username).first()
     if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
-    
+        raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
+
+    existing_email = db.query(User).filter_by(email=user.email).first()
+    if existing_email:
+        raise HTTPException(status_code=409, detail="Email уже зарегистрирован")
+
     hashed_password = pwd_context.hash(user.password)
     new_user = User(username=user.username, email=user.email, password_hash=hashed_password)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    
+
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Ошибка при регистрации пользователя")
+
     access_token = create_access_token(data={"sub": new_user.username})
     return {"username": new_user.username, "access_token": access_token}
 
