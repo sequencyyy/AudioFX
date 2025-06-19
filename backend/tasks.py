@@ -86,7 +86,7 @@ def slowed_reverb_audio(self, file_path: str, speed: float, reverb_amount: float
         
         
         subprocess.run([
-            "ffmpeg",
+            "ffmpeg", "-y",
             "-i", file_path,
             "-af", param_reverb,
             "-b:a", "320k", "-ar", '44100',
