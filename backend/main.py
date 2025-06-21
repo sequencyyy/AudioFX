@@ -64,7 +64,7 @@ os.makedirs(PROCESSED_DIR, exist_ok=True)
 os.makedirs(ORIGINAL_DIR, exist_ok=True)
 
 ALGORITHM = "HS256"
-SECRET_KEY="nvsu-secret-key"
+SECRET_KEY="*"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
