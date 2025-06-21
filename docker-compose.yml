@@ -18,7 +18,7 @@ services:
       - ./processed:/app/processed
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/audio
-      - SECRET_KEY=nvsu-secret-key
+      - SECRET_KEY=*
 
   celery:
     build:
@@ -37,8 +37,8 @@ services:
     container_name: pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: *
+      PGADMIN_DEFAULT_PASSWORD: *
     ports:
       - "5050:80"
     depends_on:
@@ -52,7 +52,7 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_URL=http://85.198.82.123:8000
+      - REACT_APP_API_URL=http://*:8000
     volumes:
       - ./frontend:/app
 
@@ -61,7 +61,7 @@ services:
       environment:
         POSTGRES_DB: audio
         POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
+        POSTGRES_PASSWORD: *
       ports:
         - "5432:5432"
       volumes:
